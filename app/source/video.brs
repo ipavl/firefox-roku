@@ -18,6 +18,7 @@ function playVideo(server as object, connection as object, args as dynamic) as o
     this.canvas.show()
 
     this.player.setMessagePort(this.port)
+    this.player.setCertificatesFile("common:/certs/ca-bundle.crt")
 
     ' Video setup
     print "video URL: "; args.url
