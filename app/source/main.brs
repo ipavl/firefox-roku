@@ -76,19 +76,19 @@ end function
 
 function main_getContentList() as object
     list = [{
-        Title: "Introduction",
+        Title: "Get set up",
         HDBackgroundImageUrl: "pkg:/images/introduction_hd.png",
         SDBackgroundImageUrl: "pkg:/images/introduction_sd.png",
         handler: createIntroduction
     },
     {
-        Title: "Recent History",
+        Title: "View recent history",
         HDBackgroundImageUrl: "pkg:/images/history_hd.png",
         SDBackgroundImageUrl: "pkg:/images/history_sd.png",
         handler: createRecentHistory
     },
     {
-        Title: "Help",
+        Title: "Help & settings",
         HDBackgroundImageUrl: "pkg:/images/help_hd.png",
         SDBackgroundImageUrl: "pkg:/images/help_sd.png",
         handler: createAbout
