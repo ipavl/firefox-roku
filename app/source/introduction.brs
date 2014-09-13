@@ -41,12 +41,12 @@ function introduction_getContentList() as object
         SDBackgroundImageUrl: "pkg:/images/introduction_step1_sd.png",
     },
     {
-        Title: "Setup devices on the same Wifi network",
+        Title: "Set up devices on the same Wifi network",
         HDBackgroundImageUrl: "pkg:/images/introduction_step2_hd.png",
         SDBackgroundImageUrl: "pkg:/images/introduction_step2_sd.png",
     },
     {
-        Title: "Cast a video to your Roku",
+        Title: "Send a video to your Roku",
         HDBackgroundImageUrl: "pkg:/images/introduction_step3_hd.png",
         SDBackgroundImageUrl: "pkg:/images/introduction_step3_sd.png",
     }]
