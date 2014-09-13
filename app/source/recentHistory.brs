@@ -9,6 +9,7 @@ function createRecentHistory(server as object)
         screen: createObject("roGridScreen")
         history: []
         selectedItem: invalid
+        selectInitialItem: history_selectInitialItem
         clearItem: history_clearItem
         clearHistory: history_clearHistory
         eventLoop: history_eventLoop
@@ -30,14 +31,7 @@ function createRecentHistory(server as object)
     this.screen.setContentList(0, this.history[0])
     this.screen.setContentList(1, this.history[1])
 
-    ' Hide the history row if we have no history. Also, set the default
-    ' selection based on the visible rows
-    if this.history[0].count() = 0 then
-        this.screen.setListVisible(0, false)
-        this.selectedItem = this.history[1][0]
-    else
-        this.selectedItem = this.history[0][0]
-    end if
+    this.selectInitialItem()
 
     ' Must be called after setupLists()
     this.screen.setDescriptionVisible(false)
@@ -46,6 +40,17 @@ function createRecentHistory(server as object)
 
     this.eventLoop()
 end function
+
+sub history_selectInitialItem()
+    ' Hide the history row if we have no history. Also, set the default
+    ' selection based on the visible rows
+    if m.history[0].count() = 0 then
+        m.screen.setListVisible(0, false)
+        m.selectedItem = m.history[1][0]
+    else
+        m.selectedItem = m.history[0][0]
+    end if
+end sub
 
 function history_eventLoop()
     while (true)
@@ -73,16 +78,24 @@ function history_eventLoop()
                 if event.getIndex() = 0 then '<BACK>
                     m.screen.close()
                 else if event.getIndex() = 10 then '<INFO>
+                    ' Determine the types of actions
+                    actionText = ["Play", "Remove from history", "-", "Clear all history"]
+                    actionMap = [0, 1, 2]
+                    if m.selectedItem.removable = false then
+                        actionText = ["Play", "-", "Clear all history"]
+                        actionMap = [0, 2]
+                    end if
+
                     ' Display a popup
-                    result = showPopup("Options", ["Play", "Remove from history", "-", "Clear all history"])
-                    if result = 0 then
+                    result = showPopup("Options", actionText)
+                    if actionMap[result] = 0 and m.selectedItem <> invalid then
                         videoParams = {
                             url: m.selectedItem.videoURL
                         }
                         playVideo(invalid, invalid, videoParams)
-                    else if result = 1 and m.selectedItem <> invalid then
+                    else if actionMap[result] = 1 and m.selectedItem <> invalid then
                         m.clearItem(m.selectedItem.videoURL)
-                    else if result = 2 then
+                    else if actionMap[result] = 2 then
                         m.clearHistory()
                     end if
                 end if
@@ -97,8 +110,11 @@ sub history_clearItem(url as dynamic)
     result = showMessage("Firefox", "Do you want to remove this video from history?", ["Yes", "No"])
     if result = 0 then
         removeFromHistory({ url: url })
-        showMessage("Firefox", "Video has been removed.")
-        ' TODO: Update the screen
+
+        ' Update the screen
+        m.history[0] = getRecentHistory()
+        m.screen.setContentList(0, m.history[0])
+        m.selectInitialItem()
     end if
 end sub
 
@@ -124,6 +140,7 @@ function getRecentHistory() as object
                 HDPosterUrl: video.poster
                 SDPosterUrl: video.poster
                 videoURL: video.url
+                removable: true
             })
         end for
         return list
@@ -143,6 +160,7 @@ function getDefaultHistory() as object
             HDPosterUrl: video.poster
             SDPosterUrl: video.poster
             videoURL: video.url
+            removable: false
         })
     end for
     return list
@@ -203,6 +221,11 @@ function removeFromHistory(args as dynamic)
         end if
         index = index + 1
     end for
+
+    ' If history is empty, just clear the registry
+    if history.count() = 0 then
+        return clearHistory()
+    end if
 
     json = toJSON(history)
     return registryWrite("history", json)
