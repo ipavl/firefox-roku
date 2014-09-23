@@ -70,6 +70,9 @@ function showPopup(title As dynamic, buttons As dynamic) As object
             else if dlgMsg.isButtonPressed()
                 dialog = invalid
                 return dlgMsg.getIndex()
+            else if dlgMsg.isButtonInfo() then
+                dialog = invalid
+                return -1
             endif
         endif
     end while
