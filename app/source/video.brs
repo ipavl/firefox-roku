@@ -67,6 +67,7 @@ function video_eventLoop() as object
                 m.paint()
             else if event.isFullResult() then
                 m.updateStatus("completed")
+                return 0
             else if event.isRequestFailed() then
                 m.updateStatus("failed")
                 message = event.getMessage()
