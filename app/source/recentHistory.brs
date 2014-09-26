@@ -84,6 +84,10 @@ function history_eventLoop()
                     if m.selectedItem.removable = false then
                         actionText = ["Play", "-", "Clear all history"]
                         actionMap = [0, 2]
+                        if m.history[0].count() = 0 then
+                            actionText = ["Play"]
+                            actionMap = [0]
+                        end if
                     end if
 
                     ' Display a popup
