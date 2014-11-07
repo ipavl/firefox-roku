@@ -11,7 +11,7 @@ function createIntroduction(server as object)
     }
 
     this.screen.setMessagePort(this.port)
-    this.screen.setBreadcrumbText("Home", "Introduction")
+    this.screen.setBreadcrumbText("Home", "Setup")
 
     this.screen.setContent(this.content)
     this.screen.show()
