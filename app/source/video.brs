@@ -22,9 +22,16 @@ function playVideo(server as object, connection as object, args as dynamic) as o
 
     ' Video setup
     print "video URL: "; args.url
+
+    if right(args.url, 3) = ".ts" then
+        sf = "ts"
+    else
+        sf = "mp4"
+    end if
+
     this.player.SetContentList([{
         Stream: { url: args.url }
-        StreamFormat: "mp4"
+        StreamFormat: sf
     }])
 
     this.player.play()
