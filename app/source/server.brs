@@ -73,8 +73,10 @@ function server_processEvents() as void
                             poster: params.poster
                         }
 
-                        ' TODO: Only save the video to history if it launched successfully
-                        saveToHistory(videoParams)
+                        if registryRead("save-history") <> "false" then
+                            ' TODO: Only save the video to history if it launched successfully
+                            saveToHistory(videoParams)
+                        end if
 
                         playVideo(m, connection, videoParams)
                         return

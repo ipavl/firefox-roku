@@ -59,6 +59,15 @@ sub main(params as dynamic)
     sleep(50)
 end sub
 
+function createToggleHistoryDialog(server as object)
+    result = showMessage("Firefox", "Do you want to save watch history? Current history will not be deleted.", ["Yes", "No"])
+    if result = 0 then
+        return registryWrite("save-history", "true")
+    else
+        return registryWrite("save-history", "false")
+    end if
+end function
+
 function main_eventLoop(server as object)
     while true
         server.processEvents()
@@ -86,6 +95,12 @@ function main_getContentList() as object
         HDBackgroundImageUrl: "pkg:/images/history_hd.png",
         SDBackgroundImageUrl: "pkg:/images/history_sd.png",
         handler: createRecentHistory
+    },
+    {
+        Title: "Toggle watch history",
+        HDBackgroundImageUrl: "pkg:/images/history_hd.png",
+        SDBackgroundImageUrl: "pkg:/images/history_sd.png",
+        handler: createToggleHistoryDialog
     },
     {
         Title: "Help & settings",
